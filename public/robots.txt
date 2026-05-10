@@ -1,0 +1,13 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /shop/checkout
+Disallow: /shop/account
+Disallow: /shop/payment-success
+Disallow: /shop/paymob-return
+Disallow: /unauth-page
+
+# Sitemap (replace with your production URL)
+Sitemap: https://yoursite.com/sitemap.xml

@@ -1,0 +1,107 @@
+import { Outlet, NavLink } from "react-router-dom";
+import { Home, Store, ShoppingCart, User, Menu } from "lucide-react";
+import ShoppingHeader from "./header";
+import { useState } from "react";
+
+function BottomNav({ onCartOpen, onMenuOpen }) {
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.08)]">
+      <div className="flex justify-around items-center h-16 max-w-lg mx-auto">
+        {/* Home */}
+        <NavLink
+          to="/shop/home"
+          end
+          className={({ isActive }) =>
+            `flex flex-col items-center justify-center gap-1 flex-1 py-2 text-[11px] font-medium transition-colors duration-150 ${
+              isActive ? "text-orange-500" : "text-gray-400 hover:text-gray-600"
+            }`
+          }
+        >
+          {({ isActive }) => (
+            <>
+              <Home size={22} strokeWidth={isActive ? 2.5 : 1.8} />
+              <span>Home</span>
+            </>
+          )}
+        </NavLink>
+
+        {/* Shop */}
+        <NavLink
+          to="/shop/listing"
+          className={({ isActive }) =>
+            `flex flex-col items-center justify-center gap-1 flex-1 py-2 text-[11px] font-medium transition-colors duration-150 ${
+              isActive ? "text-orange-500" : "text-gray-400 hover:text-gray-600"
+            }`
+          }
+        >
+          {({ isActive }) => (
+            <>
+              <Store size={22} strokeWidth={isActive ? 2.5 : 1.8} />
+              <span>Shop</span>
+            </>
+          )}
+        </NavLink>
+
+        {/* Cart — opens sheet, no navigation */}
+        <button
+          onClick={onCartOpen}
+          className="flex flex-col items-center justify-center gap-1 flex-1 py-2 text-[11px] font-medium text-gray-400 hover:text-gray-600 transition-colors duration-150"
+        >
+          <ShoppingCart size={22} strokeWidth={1.8} />
+          <span>Cart</span>
+        </button>
+
+        {/* Account */}
+        <NavLink
+          to="/shop/account"
+          className={({ isActive }) =>
+            `flex flex-col items-center justify-center gap-1 flex-1 py-2 text-[11px] font-medium transition-colors duration-150 ${
+              isActive ? "text-orange-500" : "text-gray-400 hover:text-gray-600"
+            }`
+          }
+        >
+          {({ isActive }) => (
+            <>
+              <User size={22} strokeWidth={isActive ? 2.5 : 1.8} />
+              <span>Account</span>
+            </>
+          )}
+        </NavLink>
+
+        {/* Menu — opens mobile sheet, no navigation */}
+        <button
+          onClick={onMenuOpen}
+          className="flex flex-col items-center justify-center gap-1 flex-1 py-2 text-[11px] font-medium text-gray-400 hover:text-gray-600 transition-colors duration-150"
+        >
+          <Menu size={22} strokeWidth={1.8} />
+          <span>Menu</span>
+        </button>
+      </div>
+    </nav>
+  );
+}
+
+function ShoppingLayout() {
+  const [openCartSheet, setOpenCartSheet] = useState(false);
+  const [openMenuSheet, setOpenMenuSheet] = useState(false);
+
+  return (
+    <div className="flex min-h-screen flex-col overflow-hidden bg-transparent">
+      <ShoppingHeader
+        openCartSheet={openCartSheet}
+        setOpenCartSheet={setOpenCartSheet}
+        openMenuSheet={openMenuSheet}
+        setOpenMenuSheet={setOpenMenuSheet}
+      />
+      <main className="flex flex-col w-full pb-16">
+        <Outlet />
+      </main>
+      <BottomNav
+        onCartOpen={() => setOpenCartSheet(true)}
+        onMenuOpen={() => setOpenMenuSheet(true)}
+      />
+    </div>
+  );
+}
+
+export default ShoppingLayout;
