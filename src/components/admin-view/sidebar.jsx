@@ -6,12 +6,10 @@ import {
   Image,
   Tag,
   Award,
-  Palette,
 } from "lucide-react";
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
-import { useSelector } from "react-redux";
 
 const adminSidebarMenuItems = [
   {
@@ -50,12 +48,6 @@ const adminSidebarMenuItems = [
     path: "/admin/brands",
     icon: <Award />,
   },
-  {
-    id: "theme",
-    label: "Theme",
-    path: "/admin/theme",
-    icon: <Palette />,
-  },
 ];
 
 function MenuItems({ setOpen }) {
@@ -82,7 +74,6 @@ function MenuItems({ setOpen }) {
 
 function AdminSideBar({ open, setOpen }) {
   const navigate = useNavigate();
-  const { palette } = useSelector((state) => state.theme);
 
   return (
     <Fragment>
@@ -91,16 +82,10 @@ function AdminSideBar({ open, setOpen }) {
           <div className="flex flex-col h-full">
             <SheetHeader className="border-b">
               <SheetTitle className="flex gap-2 mt-5 mb-5">
-                {palette?.logo ? (
-                  <img
-                    src={palette.logo}
-                    alt="Site logo"
-                    className="h-8 w-8 rounded object-cover"
-                  />
-                ) : (
-                  <ChartNoAxesCombined size={30} className="text-primary" />
-                )}
-                <h1 className="font-heading text-2xl font-extrabold text-foreground">Admin Panel</h1>
+                <ChartNoAxesCombined size={30} className="text-primary" />
+                <h1 className="font-heading text-2xl font-extrabold text-foreground">
+                  Admin Panel
+                </h1>
               </SheetTitle>
             </SheetHeader>
             <MenuItems setOpen={setOpen} />
@@ -112,16 +97,10 @@ function AdminSideBar({ open, setOpen }) {
           onClick={() => navigate("/admin/dashboard")}
           className="flex cursor-pointer items-center gap-2"
         >
-          {palette?.logo ? (
-            <img
-              src={palette.logo}
-              alt="Site logo"
-              className="h-8 w-8 rounded object-cover"
-            />
-          ) : (
-            <ChartNoAxesCombined size={30} className="text-primary" />
-          )}
-          <h1 className="font-heading text-2xl font-extrabold text-foreground">Admin Panel</h1>
+          <ChartNoAxesCombined size={30} className="text-primary" />
+          <h1 className="font-heading text-2xl font-extrabold text-foreground">
+            Admin Panel
+          </h1>
         </div>
         <MenuItems />
       </aside>

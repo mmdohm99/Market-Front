@@ -2,9 +2,10 @@ import CommonForm from "@/components/common/form";
 import { useToast } from "@/components/ui/use-toast";
 import { loginFormControls } from "@/config";
 import { loginUser } from "@/store/auth-slice";
+import { mergeGuestCartOnLogin } from "@/store/shop/cart-slice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const initialState = {
   email: "",
@@ -15,13 +16,19 @@ function AuthLogin() {
   const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo = location.state?.from || "/shop/home";
 
   function onSubmit(event) {
     event.preventDefault();
     dispatch(loginUser(formData)).then((data) => {
-      console.log("Login response:", data);
       if (data?.payload?.success) {
-        toast({ title: data?.payload?.message });
+        const userId = data.payload.user?.id;
+        dispatch(mergeGuestCartOnLogin(userId)).then(() => {
+          toast({ title: data?.payload?.message });
+          navigate(redirectTo);
+        });
       } else {
         toast({ title: data?.message, variant: "destructive" });
       }

@@ -111,6 +111,10 @@ function ShoppingListing() {
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
+        product: productList.find(
+          (item) =>
+            item._id === getCurrentProductId || item.id === getCurrentProductId,
+        ),
       }),
     ).then((data) => {
       if (data?.payload?.success) {

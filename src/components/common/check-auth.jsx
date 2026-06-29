@@ -3,28 +3,28 @@ import { Navigate, useLocation } from "react-router-dom";
 function CheckAuth({ isAuthenticated, user, children }) {
   const location = useLocation();
 
-  console.log(location.pathname, isAuthenticated);
+  const isAuthRoute =
+    location.pathname.includes("/login") ||
+    location.pathname.includes("/register");
+  const isAdminRoute = location.pathname.includes("/admin");
+  const isShopRoute = location.pathname.includes("/shop");
+  const isProtectedShopRoute =
+    location.pathname.includes("/shop/checkout") ||
+    location.pathname.includes("/shop/account") ||
+    location.pathname.includes("/shop/paymob-return") ||
+    location.pathname.includes("/shop/payment-success");
 
   if (location.pathname === "/") {
-    if (!isAuthenticated) {
-      return <Navigate to="/auth/login" />;
-    } else {
-      if (user?.role === "admin") {
-        return <Navigate to="/admin/dashboard" />;
-      } else {
-        return <Navigate to="/shop/home" />;
-      }
+    if (isAuthenticated && user?.role === "admin") {
+      return <Navigate to="/admin/dashboard" />;
     }
+    return <Navigate to="/shop/home" />;
   }
 
-  if (
-    !isAuthenticated &&
-    !(
-      location.pathname.includes("/login") ||
-      location.pathname.includes("/register")
-    )
-  ) {
-    return <Navigate to="/auth/login" />;
+  if (!isAuthenticated && (isProtectedShopRoute || isAdminRoute)) {
+    return (
+      <Navigate to="/auth/login" state={{ from: location.pathname }} replace />
+    );
   }
 
   if (
@@ -34,9 +34,8 @@ function CheckAuth({ isAuthenticated, user, children }) {
   ) {
     if (user?.role === "admin") {
       return <Navigate to="/admin/dashboard" />;
-    } else {
-      return <Navigate to="/shop/home" />;
     }
+    return <Navigate to="/shop/home" />;
   }
 
   if (
@@ -53,6 +52,10 @@ function CheckAuth({ isAuthenticated, user, children }) {
     location.pathname.includes("shop")
   ) {
     return <Navigate to="/admin/dashboard" />;
+  }
+
+  if (!isAuthenticated && !isShopRoute && !isAuthRoute) {
+    return <Navigate to="/shop/home" />;
   }
 
   return <>{children}</>;

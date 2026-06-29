@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import UserCartItemsContent from "./cart-items-content";
 
 function UserCartWrapper({ cartItems, setOpenCartSheet }) {
   const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const totalCartAmount =
     cartItems && cartItems.length > 0
@@ -37,7 +39,11 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
       </div>
       <Button
         onClick={() => {
-          navigate("/shop/checkout");
+          if (!isAuthenticated) {
+            navigate("/auth/login", { state: { from: "/shop/checkout" } });
+          } else {
+            navigate("/shop/checkout");
+          }
           setOpenCartSheet(false);
         }}
         className="w-full mt-6"

@@ -72,11 +72,17 @@ function ShoppingHome() {
   }
 
   function handleAddtoCart(getCurrentProductId) {
+    const product = productList.find(
+      (item) =>
+        item._id === getCurrentProductId || item.id === getCurrentProductId,
+    );
+
     dispatch(
       addToCart({
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
+        product,
       }),
     ).then((data) => {
       if (data?.payload?.success) {
@@ -116,7 +122,7 @@ function ShoppingHome() {
     dispatch(getActiveBanners());
     dispatch(getActiveCategories());
     dispatch(getActiveBrands());
-    if (user?.id) dispatch(fetchCartItems(user.id));
+    dispatch(fetchCartItems(user?.id));
   }, [dispatch, user?.id]);
 
   const banners =

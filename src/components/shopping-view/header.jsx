@@ -34,7 +34,7 @@ import { useEffect, useState, useMemo } from "react";
 import { fetchCartItems } from "@/store/shop/cart-slice";
 import { Label } from "../ui/label";
 import { getActiveCategories } from "@/store/admin/category-slice";
-import { applyThemePalette, setDarkModePreference } from "@/lib/theme-palette";
+import { toggleDarkMode } from "@/lib/theme";
 
 function MenuItems() {
   const navigate = useNavigate();
@@ -164,9 +164,8 @@ function GlobalSearch() {
 
 // Now accepts openCartSheet + setOpenCartSheet from parent (ShoppingLayout)
 function HeaderRightContent({ openCartSheet, setOpenCartSheet }) {
-  const { user } = useSelector((state) => state.auth);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
-  const { palette } = useSelector((state) => state.theme);
   const [isDarkMode, setIsDarkMode] = useState(
     document.documentElement.classList.contains("dark"),
   );
@@ -174,39 +173,29 @@ function HeaderRightContent({ openCartSheet, setOpenCartSheet }) {
   const dispatch = useDispatch();
 
   function handleLogout() {
-    dispatch(logoutUser());
+    dispatch(logoutUser()).then(() => {
+      dispatch(fetchCartItems());
+    });
   }
 
   useEffect(() => {
     dispatch(fetchCartItems(user?.id));
-  }, [dispatch]);
-
-  useEffect(() => {
-    setIsDarkMode(document.documentElement.classList.contains("dark"));
-  }, [palette]);
+  }, [dispatch, user?.id]);
 
   function handleToggleDarkMode() {
-    const nextMode = !document.documentElement.classList.contains("dark");
-    setDarkModePreference(nextMode);
-    applyThemePalette(palette, nextMode);
-    setIsDarkMode(nextMode);
+    setIsDarkMode(toggleDarkMode());
   }
-
-  const showDarkToggle =
-    palette?.allowDarkMode === true || palette?.darkMode === true;
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
-      {showDarkToggle && (
-        <Button onClick={handleToggleDarkMode} variant="outline" size="sm">
-          {isDarkMode ? (
-            <Sun className="w-4 h-4 mr-2" />
-          ) : (
-            <Moon className="w-4 h-4 mr-2" />
-          )}
-          {isDarkMode ? "Light" : "Dark"}
-        </Button>
-      )}
+      <Button onClick={handleToggleDarkMode} variant="outline" size="sm">
+        {isDarkMode ? (
+          <Sun className="w-4 h-4 mr-2" />
+        ) : (
+          <Moon className="w-4 h-4 mr-2" />
+        )}
+        {isDarkMode ? "Light" : "Dark"}
+      </Button>
 
       {/* Cart Sheet — controlled by lifted state */}
       <Sheet open={openCartSheet} onOpenChange={setOpenCartSheet}>
@@ -232,28 +221,43 @@ function HeaderRightContent({ openCartSheet, setOpenCartSheet }) {
         />
       </Sheet>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Avatar className="bg-primary cursor-pointer">
-            <AvatarFallback className="bg-primary text-primary-foreground font-extrabold">
-              {user?.userName[0].toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="bottom" align="end" className="w-56">
-          <DropdownMenuLabel>Logged in as {user?.userName}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => navigate("/shop/account")}>
-            <UserCog className="mr-2 h-4 w-4" />
-            Account
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout}>
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      {isAuthenticated ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar className="bg-primary cursor-pointer">
+              <AvatarFallback className="bg-primary text-primary-foreground font-extrabold">
+                {user?.userName[0].toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom" align="end" className="w-56">
+            <DropdownMenuLabel>Logged in as {user?.userName}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate("/shop/account")}>
+              <UserCog className="mr-2 h-4 w-4" />
+              Account
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : (
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate("/auth/login")}
+          >
+            Login
+          </Button>
+          <Button size="sm" onClick={() => navigate("/auth/register")}>
+            Sign up
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
@@ -265,8 +269,6 @@ function ShoppingHeader({
   openMenuSheet,
   setOpenMenuSheet,
 }) {
-  const { palette } = useSelector((state) => state.theme);
-
   return (
     <header className="glass-header sticky top-0 z-40 w-full border-b">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
@@ -275,15 +277,7 @@ function ShoppingHeader({
           to="/shop/home"
           className="flex items-center gap-2 font-heading shrink-0"
         >
-          {palette?.logo ? (
-            <img
-              src={palette.logo}
-              alt="Site logo"
-              className="h-8 w-8 rounded object-cover"
-            />
-          ) : (
-            <HousePlug className="h-6 w-6 text-primary" />
-          )}
+          <HousePlug className="h-6 w-6 text-primary" />
           <span className="font-bold text-foreground">Nodum</span>
         </Link>
 

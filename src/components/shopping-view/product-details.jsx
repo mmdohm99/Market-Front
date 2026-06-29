@@ -53,6 +53,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
+        product: productDetails,
       }),
     ).then((data) => {
       if (data?.payload?.success) {

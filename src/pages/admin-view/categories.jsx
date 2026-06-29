@@ -307,9 +307,9 @@ function AdminCategories() {
             <CardHeader>
               <CardTitle className="text-lg">{category.name}</CardTitle>
               {category.description && (
-                <p className="text-sm text-gray-600">{category.description}</p>
+                <p className="text-sm ">{category.description}</p>
               )}
-              <p className="text-xs text-gray-500">Order: {category.order}</p>
+              <p className="text-xs ">Order: {category.order}</p>
             </CardHeader>
             <CardContent>
               <div className="flex justify-between">

@@ -11,7 +11,6 @@ import AdminFeatures from "./pages/admin-view/features";
 import AdminBanners from "./pages/admin-view/banners";
 import AdminCategories from "./pages/admin-view/categories";
 import AdminBrands from "./pages/admin-view/brands";
-import AdminTheme from "./pages/admin-view/theme";
 import ShoppingLayout from "./components/shopping-view/layout";
 import NotFound from "./pages/not-found";
 import ShoppingHome from "./pages/shopping-view/home";
@@ -23,8 +22,10 @@ import UnauthPage from "./pages/unauth-page";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
-import { getThemePalette } from "./store/theme-slice";
-import { applyThemePalette, getResolvedDarkMode } from "./lib/theme-palette";
+import {
+  fetchCartItems,
+  mergeGuestCartOnLogin,
+} from "./store/shop/cart-slice";
 import { Skeleton } from "@/components/ui/skeleton";
 import PaymobReturnPage from "./pages/shopping-view/paymob-return";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
@@ -34,36 +35,21 @@ function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
     (state) => state.auth,
   );
-  const { palette } = useSelector((state) => state.theme);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(checkAuth());
-    dispatch(getThemePalette());
   }, [dispatch]);
 
   useEffect(() => {
-    applyThemePalette(palette, getResolvedDarkMode(palette));
-  }, [palette]);
+    if (isLoading) return;
 
-  useEffect(() => {
-    const faviconHref = palette?.logo || "/default-logo.svg";
-    let iconElement = document.querySelector("link[rel='icon']");
-    if (!iconElement) {
-      iconElement = document.createElement("link");
-      iconElement.setAttribute("rel", "icon");
-      document.head.appendChild(iconElement);
+    if (isAuthenticated && user?.id && user?.role !== "admin") {
+      dispatch(mergeGuestCartOnLogin(user.id));
+    } else if (!isAuthenticated) {
+      dispatch(fetchCartItems());
     }
-    iconElement.setAttribute("href", faviconHref);
-
-    let appleIconElement = document.querySelector("link[rel='apple-touch-icon']");
-    if (!appleIconElement) {
-      appleIconElement = document.createElement("link");
-      appleIconElement.setAttribute("rel", "apple-touch-icon");
-      document.head.appendChild(appleIconElement);
-    }
-    appleIconElement.setAttribute("href", faviconHref);
-  }, [palette?.logo]);
+  }, [isLoading, isAuthenticated, user?.id, user?.role, dispatch]);
 
   if (isLoading) return <Skeleton className="w-[800] h-[600px] bg-muted" />;
 
@@ -108,7 +94,6 @@ function App() {
           <Route path="banners" element={<AdminBanners />} />
           <Route path="categories" element={<AdminCategories />} />
           <Route path="brands" element={<AdminBrands />} />
-          <Route path="theme" element={<AdminTheme />} />
         </Route>
         <Route
           path="/shop"
