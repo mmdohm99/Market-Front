@@ -1,12 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import UserCartItemsContent from "./cart-items-content";
 
 function UserCartWrapper({ cartItems, setOpenCartSheet }) {
   const navigate = useNavigate();
-  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const totalCartAmount =
     cartItems && cartItems.length > 0
@@ -17,7 +15,7 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
               ? currentItem?.salePrice
               : currentItem?.price) *
               currentItem?.quantity,
-          0
+          0,
         )
       : 0;
 
@@ -28,22 +26,20 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
       </SheetHeader>
       <div className="mt-8 space-y-4">
         {cartItems && cartItems.length > 0
-          ? cartItems.map((item) => <UserCartItemsContent cartItem={item} />)
+          ? cartItems.map((item) => (
+              <UserCartItemsContent key={item.productId} cartItem={item} />
+            ))
           : null}
       </div>
       <div className="mt-8 space-y-4">
         <div className="flex justify-between">
           <span className="font-bold">Total</span>
-          <span className="font-bold">${totalCartAmount}</span>
+          <span className="font-bold">{totalCartAmount.toFixed(0)} EGP</span>
         </div>
       </div>
       <Button
         onClick={() => {
-          if (!isAuthenticated) {
-            navigate("/auth/login", { state: { from: "/shop/checkout" } });
-          } else {
-            navigate("/shop/checkout");
-          }
+          navigate("/shop/checkout");
           setOpenCartSheet(false);
         }}
         className="w-full mt-6"

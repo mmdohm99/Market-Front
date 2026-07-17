@@ -2,47 +2,49 @@ import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { brandOptionsMap, categoryOptionsMap } from "@/config";
 import { Badge } from "../ui/badge";
+import { useNavigate } from "react-router-dom";
 
-function ShoppingProductTile({
-  key,
-  product,
-  handleGetProductDetails,
-  handleAddtoCart,
-}) {
+function ShoppingProductTile({ key, product, handleAddtoCart }) {
+  const navigate = useNavigate();
+  const productId = product?._id || product?.id;
+
+  function handleOpenProduct() {
+    if (productId) {
+      navigate(`/shop/product/${productId}`);
+    }
+  }
+
   return (
     <Card
       key={key}
-      className="group w-full max-w-sm mx-auto overflow-hidden border-2 border-transparent transition-all duration-300 hover:border-primary/20 hover:shadow-xl hover:scale-[1.02]"
+      className="group mx-auto w-full max-w-sm overflow-hidden border-2 border-transparent transition-all duration-300 hover:border-primary/20 hover:shadow-xl hover:scale-[1.02]"
     >
-      <div
-        onClick={() => handleGetProductDetails(product?._id)}
-        className="cursor-pointer"
-      >
+      <div onClick={handleOpenProduct} className="cursor-pointer">
         <div className="relative overflow-hidden">
           <img
             src={product?.image}
             alt={product?.title}
-            className="w-full h-[300px] object-cover rounded-t-lg transition-transform duration-500 group-hover:scale-105"
+            className="h-[300px] w-full rounded-t-lg object-cover transition-transform duration-500 group-hover:scale-105"
           />
           {product?.totalStock === 0 ? (
-            <Badge className="absolute top-2 left-2 bg-destructive text-destructive-foreground hover:opacity-90">
+            <Badge className="absolute left-2 top-2 bg-destructive text-destructive-foreground hover:opacity-90">
               Out Of Stock
             </Badge>
           ) : product?.totalStock < 10 ? (
-            <Badge className="absolute top-2 left-2 bg-sale text-sale-foreground hover:opacity-90">
+            <Badge className="absolute left-2 top-2 bg-sale text-sale-foreground hover:opacity-90">
               {`Only ${product?.totalStock} items left`}
             </Badge>
           ) : product?.salePrice > 0 ? (
-            <Badge className="absolute top-2 left-2 bg-sale text-sale-foreground hover:opacity-90">
+            <Badge className="absolute left-2 top-2 bg-sale text-sale-foreground hover:opacity-90">
               Sale
             </Badge>
           ) : null}
         </div>
         <CardContent className="p-4">
-          <h2 className="font-heading text-xl font-bold mb-2 text-foreground">
+          <h2 className="mb-2 font-heading text-xl font-bold text-foreground">
             {product?.title}
           </h2>
-          <div className="flex justify-between items-center mb-2">
+          <div className="mb-2 flex items-center justify-between">
             <span className="text-[16px] text-muted-foreground">
               {product?.category?.name || categoryOptionsMap[product?.category]}
             </span>
@@ -50,7 +52,7 @@ function ShoppingProductTile({
               {product?.brand?.name || brandOptionsMap[product?.brand]}
             </span>
           </div>
-          <div className="flex justify-between items-center mb-2">
+          <div className="mb-2 flex items-center justify-between">
             <span
               className={`${
                 product?.salePrice > 0
@@ -58,11 +60,11 @@ function ShoppingProductTile({
                   : "text-primary"
               } text-lg font-semibold`}
             >
-              ${product?.price}
+              {product?.price} EGP
             </span>
             {product?.salePrice > 0 ? (
               <span className="text-lg font-semibold text-sale">
-                ${product?.salePrice}
+                {product?.salePrice} EGP
               </span>
             ) : null}
           </div>
@@ -70,12 +72,12 @@ function ShoppingProductTile({
       </div>
       <CardFooter>
         {product?.totalStock === 0 ? (
-          <Button className="w-full opacity-60 cursor-not-allowed">
+          <Button className="w-full cursor-not-allowed opacity-60">
             Out Of Stock
           </Button>
         ) : (
           <Button
-            onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
+            onClick={() => handleAddtoCart(productId, product?.totalStock)}
             className="w-full transition-transform hover:scale-[1.02] active:scale-[0.98]"
           >
             Add to cart

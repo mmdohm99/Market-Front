@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Outlet } from "react-router-dom";
 import Seo from "./components/seo/Seo";
 import AuthLayout from "./components/auth/layout";
 import AuthLogin from "./pages/auth/login";
@@ -30,6 +30,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import PaymobReturnPage from "./pages/shopping-view/paymob-return";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
+import ProductPage from "./pages/shopping-view/product";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -99,17 +100,24 @@ function App() {
           path="/shop"
           element={
             <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-              <ShoppingLayout />
+              <Outlet />
             </CheckAuth>
           }
         >
-          <Route path="home" element={<ShoppingHome />} />
-          <Route path="listing" element={<ShoppingListing />} />
+          <Route
+            element={
+              <ShoppingLayout />
+            }
+          >
+            <Route path="home" element={<ShoppingHome />} />
+            <Route path="listing" element={<ShoppingListing />} />
+            <Route path="account" element={<ShoppingAccount />} />
+            <Route path="paymob-return" element={<PaymobReturnPage />} />
+            <Route path="payment-success" element={<PaymentSuccessPage />} />
+            <Route path="search" element={<SearchProducts />} />
+            <Route path="product/:productId" element={<ProductPage />} />
+          </Route>
           <Route path="checkout" element={<ShoppingCheckout />} />
-          <Route path="account" element={<ShoppingAccount />} />
-          <Route path="paymob-return" element={<PaymobReturnPage />} />
-          <Route path="payment-success" element={<PaymentSuccessPage />} />
-          <Route path="search" element={<SearchProducts />} />
         </Route>
         <Route path="/unauth-page" element={<UnauthPage />} />
         <Route path="*" element={<NotFound />} />

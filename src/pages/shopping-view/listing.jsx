@@ -1,5 +1,4 @@
 import ProductFilter from "@/components/shopping-view/filter";
-import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,12 +8,12 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { sortOptions } from "@/config";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import {
   fetchAllFilteredProducts,
-  fetchProductDetails,
 } from "@/store/shop/products-slice";
 import { getActiveCategories } from "@/store/admin/category-slice";
 import { getActiveBrands } from "@/store/admin/brand-slice";
@@ -23,36 +22,47 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
+function parseFiltersFromSearchParams(searchParams) {
+  const filters = {};
+  const category = searchParams.get("category");
+  const brand = searchParams.get("brand");
+
+  if (category) {
+    filters.category = category.split(",");
+  }
+  if (brand) {
+    filters.brand = brand.split(",");
+  }
+
+  return filters;
+}
+
 function createSearchParamsHelper(filterParams) {
   const queryParams = [];
 
   for (const [key, value] of Object.entries(filterParams)) {
     if (Array.isArray(value) && value.length > 0) {
       const paramValue = value.join(",");
-
       queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
     }
   }
-
-  console.log(queryParams, "queryParams");
 
   return queryParams.join("&");
 }
 
 function ShoppingListing() {
   const dispatch = useDispatch();
-  const { productList, productDetails } = useSelector(
+  const { productList, isLoading } = useSelector(
     (state) => state.shopProducts,
   );
   const { cartItems } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
-  const [filters, setFilters] = useState({});
-  const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const [filters, setFilters] = useState(() =>
+    parseFiltersFromSearchParams(searchParams),
+  );
+  const [sort, setSort] = useState("price-lowtohigh");
   const { toast } = useToast();
-
-  const categorySearchParam = searchParams.get("category");
 
   function handleSort(value) {
     setSort(value);
@@ -76,17 +86,13 @@ function ShoppingListing() {
       else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
     }
 
-    setFilters(cpyFilters);
-    sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
-  }
-
-  function handleGetProductDetails(getCurrentProductId) {
-    console.log(getCurrentProductId);
-    dispatch(fetchProductDetails(getCurrentProductId));
+    const queryString = createSearchParamsHelper(cpyFilters);
+    setSearchParams(
+      queryString ? new URLSearchParams(queryString) : new URLSearchParams(),
+    );
   }
 
   function handleAddtoCart(getCurrentProductId, getTotalStock) {
-    console.log(cartItems);
     let getCartItems = cartItems.items || [];
 
     if (getCartItems.length) {
@@ -127,31 +133,19 @@ function ShoppingListing() {
   }
 
   useEffect(() => {
-    setSort("price-lowtohigh");
-    setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
     dispatch(getActiveCategories());
     dispatch(getActiveBrands());
-  }, [categorySearchParam, dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
-    if (filters && Object.keys(filters).length > 0) {
-      const createQueryString = createSearchParamsHelper(filters);
-      setSearchParams(new URLSearchParams(createQueryString));
-    }
-  }, [filters]);
+    setFilters(parseFiltersFromSearchParams(searchParams));
+  }, [searchParams]);
 
   useEffect(() => {
-    if (filters !== null && sort !== null)
-      dispatch(
-        fetchAllFilteredProducts({ filterParams: filters, sortParams: sort }),
-      );
+    dispatch(
+      fetchAllFilteredProducts({ filterParams: filters, sortParams: sort }),
+    );
   }, [dispatch, sort, filters]);
-
-  useEffect(() => {
-    if (productDetails !== null) setOpenDetailsDialog(true);
-  }, [productDetails]);
-
-  console.log(productList, "productListproductListproductList");
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
@@ -161,7 +155,7 @@ function ShoppingListing() {
           <h2 className="text-lg font-extrabold">All Products</h2>
           <div className="flex items-center gap-3">
             <span className="text-muted-foreground">
-              {productList?.length} Products
+              {isLoading ? "..." : productList?.length} Products
             </span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -190,23 +184,21 @@ function ShoppingListing() {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-          {productList && productList.length > 0
-            ? productList.map((productItem) => (
-                <ShoppingProductTile
-                  key={productItem.id}
-                  handleGetProductDetails={handleGetProductDetails}
-                  product={productItem}
-                  handleAddtoCart={handleAddtoCart}
-                />
+          {isLoading
+            ? Array.from({ length: 8 }).map((_, index) => (
+                <Skeleton key={index} className="h-[380px] w-full rounded-lg" />
               ))
-            : null}
+            : productList && productList.length > 0
+              ? productList.map((productItem) => (
+                  <ShoppingProductTile
+                    key={productItem.id || productItem._id}
+                    product={productItem}
+                    handleAddtoCart={handleAddtoCart}
+                  />
+                ))
+              : null}
         </div>
       </div>
-      <ProductDetailsDialog
-        open={openDetailsDialog}
-        setOpen={setOpenDetailsDialog}
-        productDetails={productDetails}
-      />
     </div>
   );
 }

@@ -127,6 +127,8 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
+        // redirect to login page
+        window.location.href = "/auth/login";
       });
   },
 });

@@ -59,10 +59,15 @@ function AdminBrands() {
       return;
     }
 
+    const brandPayload = {
+      ...formData,
+      logo: uploadedImageUrl || formData.logo,
+    };
+
     try {
       if (editingBrand) {
         await dispatch(
-          updateBrand({ id: editingBrand._id, brandData: formData })
+          updateBrand({ id: editingBrand._id, brandData: brandPayload })
         );
         toast({
           title: "Success",
@@ -71,7 +76,7 @@ function AdminBrands() {
       } else {
         await dispatch(
           createBrand({
-            ...formData,
+            ...brandPayload,
             slug: formData.name.toLowerCase().replace(/ /g, "-"),
           })
         );
@@ -223,14 +228,10 @@ function AdminBrands() {
                   setUploadedImageUrl={setUploadedImageUrl}
                   setImageLoadingState={setImageLoadingState}
                   imageLoadingState={imageLoadingState}
-                  isCustomStyling={true}
-                />
-                <Input
-                  type="hidden"
-                  value={uploadedImageUrl}
-                  onChange={(e) =>
-                    setFormData({ ...formData, logo: e.target.value })
+                  onImageUrlChange={(url) =>
+                    setFormData((prev) => ({ ...prev, logo: url }))
                   }
+                  isCustomStyling={true}
                 />
               </div>
 
@@ -272,7 +273,10 @@ function AdminBrands() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isLoading}>
+                <Button
+                  type="submit"
+                  disabled={isLoading || imageLoadingState}
+                >
                   {editingBrand ? "Update" : "Create"} Brand
                 </Button>
               </div>

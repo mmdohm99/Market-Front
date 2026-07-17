@@ -5,15 +5,15 @@ import { useState } from "react";
 
 function BottomNav({ onCartOpen, onMenuOpen }) {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.08)]">
-      <div className="flex justify-around items-center h-16 max-w-lg mx-auto">
+    <nav className="glass-header fixed bottom-0 left-0 right-0 z-50 border-t border-border lg:hidden">
+      <div className="mx-auto flex h-16 max-w-lg items-center justify-around">
         {/* Home */}
         <NavLink
           to="/shop/home"
           end
           className={({ isActive }) =>
-            `flex flex-col items-center justify-center gap-1 flex-1 py-2 text-[11px] font-medium transition-colors duration-150 ${
-              isActive ? "text-orange-500" : "text-gray-400 hover:text-gray-600"
+            `flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[11px] font-medium transition-colors duration-150 ${
+              isActive ? "text-orange-500" : "text-muted-foreground hover:text-foreground"
             }`
           }
         >
@@ -29,8 +29,8 @@ function BottomNav({ onCartOpen, onMenuOpen }) {
         <NavLink
           to="/shop/listing"
           className={({ isActive }) =>
-            `flex flex-col items-center justify-center gap-1 flex-1 py-2 text-[11px] font-medium transition-colors duration-150 ${
-              isActive ? "text-orange-500" : "text-gray-400 hover:text-gray-600"
+            `flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[11px] font-medium transition-colors duration-150 ${
+              isActive ? "text-orange-500" : "text-muted-foreground hover:text-foreground"
             }`
           }
         >
@@ -45,7 +45,7 @@ function BottomNav({ onCartOpen, onMenuOpen }) {
         {/* Cart — opens sheet, no navigation */}
         <button
           onClick={onCartOpen}
-          className="flex flex-col items-center justify-center gap-1 flex-1 py-2 text-[11px] font-medium text-gray-400 hover:text-gray-600 transition-colors duration-150"
+          className="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[11px] font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground"
         >
           <ShoppingCart size={22} strokeWidth={1.8} />
           <span>Cart</span>
@@ -55,8 +55,8 @@ function BottomNav({ onCartOpen, onMenuOpen }) {
         <NavLink
           to="/shop/account"
           className={({ isActive }) =>
-            `flex flex-col items-center justify-center gap-1 flex-1 py-2 text-[11px] font-medium transition-colors duration-150 ${
-              isActive ? "text-orange-500" : "text-gray-400 hover:text-gray-600"
+            `flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[11px] font-medium transition-colors duration-150 ${
+              isActive ? "text-orange-500" : "text-muted-foreground hover:text-foreground"
             }`
           }
         >
@@ -71,7 +71,7 @@ function BottomNav({ onCartOpen, onMenuOpen }) {
         {/* Menu — opens mobile sheet, no navigation */}
         <button
           onClick={onMenuOpen}
-          className="flex flex-col items-center justify-center gap-1 flex-1 py-2 text-[11px] font-medium text-gray-400 hover:text-gray-600 transition-colors duration-150"
+          className="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[11px] font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground"
         >
           <Menu size={22} strokeWidth={1.8} />
           <span>Menu</span>
@@ -84,6 +84,7 @@ function BottomNav({ onCartOpen, onMenuOpen }) {
 function ShoppingLayout() {
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const [openMenuSheet, setOpenMenuSheet] = useState(false);
+  const [openSearchSheet, setOpenSearchSheet] = useState(false);
 
   return (
     <div className="flex min-h-screen flex-col overflow-hidden bg-transparent">
@@ -92,8 +93,10 @@ function ShoppingLayout() {
         setOpenCartSheet={setOpenCartSheet}
         openMenuSheet={openMenuSheet}
         setOpenMenuSheet={setOpenMenuSheet}
+        openSearchSheet={openSearchSheet}
+        setOpenSearchSheet={setOpenSearchSheet}
       />
-      <main className="flex flex-col w-full pb-16">
+      <main className="flex flex-col w-full pb-16 lg:pb-0">
         <Outlet />
       </main>
       <BottomNav

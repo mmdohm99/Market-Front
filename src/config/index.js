@@ -222,3 +222,14 @@ export const addressFormControls = [
     placeholder: "Enter any additional notes",
   },
 ];
+
+export const siteAnnouncement = {
+  text: "حجز الأوردر : 50% من ثمن الأوردر",
+  storageKey: "nodum-announcement-dismissed",
+};
+
+export const socialLinks = [
+  { id: "instagram", label: "Instagram", url: "https://instagram.com" },
+  { id: "whatsapp", label: "WhatsApp", url: "https://wa.me/" },
+  { id: "tiktok", label: "TikTok", url: "https://tiktok.com" },
+];

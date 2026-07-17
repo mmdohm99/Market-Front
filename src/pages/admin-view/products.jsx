@@ -1,4 +1,4 @@
-import ProductImageUpload from "@/components/admin-view/image-upload";
+import ProductImagesUpload from "@/components/admin-view/product-images-upload";
 import AdminProductTile from "@/components/admin-view/product-tile";
 import CommonForm from "@/components/common/form";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,11 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  buildProductImagePayload,
+  getProductMainImage,
+  getProductSubImages,
+} from "@/lib/product-images";
 import { addProductFormElements } from "@/config";
 import {
   addNewProduct,
@@ -37,9 +42,8 @@ function AdminProducts() {
   const [openCreateProductsDialog, setOpenCreateProductsDialog] =
     useState(false);
   const [formData, setFormData] = useState(initialFormData);
-  const [imageFile, setImageFile] = useState(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
-  const [imageLoadingState, setImageLoadingState] = useState(false);
+  const [mainImage, setMainImage] = useState("");
+  const [subImages, setSubImages] = useState([]);
   const [currentEditedId, setCurrentEditedId] = useState(null);
 
   const { productList } = useSelector((state) => state.adminProducts);
@@ -51,35 +55,42 @@ function AdminProducts() {
   function onSubmit(event) {
     event.preventDefault();
 
+    if (!mainImage) {
+      toast({
+        title: "Error",
+        description: "Please upload a main product image",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const imagePayload = buildProductImagePayload(mainImage, subImages);
+    const payload = {
+      ...formData,
+      ...imagePayload,
+    };
+
     currentEditedId !== null
       ? dispatch(
           editProduct({
             id: currentEditedId,
-            formData,
+            formData: payload,
           }),
         ).then((data) => {
-          console.log(data, "edit");
-
           if (data?.payload?.success) {
             dispatch(fetchAllProducts());
-            setFormData(initialFormData);
-            setOpenCreateProductsDialog(false);
-            setCurrentEditedId(null);
+            handleCloseProductSheet();
+            toast({
+              title: "Product updated successfully",
+            });
           }
         })
-      : dispatch(
-          addNewProduct({
-            ...formData,
-            image: uploadedImageUrl,
-          }),
-        ).then((data) => {
+      : dispatch(addNewProduct(payload)).then((data) => {
           if (data?.payload?.success) {
             dispatch(fetchAllProducts());
-            setOpenCreateProductsDialog(false);
-            setImageFile(null);
-            setFormData(initialFormData);
+            handleCloseProductSheet();
             toast({
-              title: "Product add successfully",
+              title: "Product added successfully",
             });
           }
         });
@@ -94,10 +105,31 @@ function AdminProducts() {
   }
 
   function isFormValid() {
+    if (!mainImage) return false;
+
     return Object.keys(formData)
-      .filter((currentKey) => currentKey !== "averageReview")
-      .map((key) => formData[key] !== "")
+      .filter(
+        (currentKey) =>
+          currentKey !== "averageReview" && currentKey !== "image",
+      )
+      .map((key) => formData[key] !== "" && formData[key] != null)
       .every((item) => item);
+  }
+
+  function handleCloseProductSheet() {
+    setOpenCreateProductsDialog(false);
+    setCurrentEditedId(null);
+    setFormData(initialFormData);
+    setMainImage("");
+    setSubImages([]);
+  }
+
+  function handleEditProduct(product) {
+    setOpenCreateProductsDialog(true);
+    setCurrentEditedId(product?._id);
+    setFormData(product);
+    setMainImage(getProductMainImage(product));
+    setSubImages(getProductSubImages(product));
   }
 
   useEffect(() => {
@@ -106,7 +138,6 @@ function AdminProducts() {
     dispatch(getAllBrands());
   }, [dispatch]);
 
-  // Create dynamic form elements with categories and brands
   const getDynamicFormElements = () => {
     return addProductFormElements.map((element) => {
       if (element.name === "category") {
@@ -131,8 +162,6 @@ function AdminProducts() {
     });
   };
 
-  console.log(formData, "productList");
-  console.log(uploadedImageUrl, "uploadedImageUrl");
   return (
     <Fragment>
       <div className="mb-5 w-full flex justify-end">
@@ -144,22 +173,18 @@ function AdminProducts() {
         {productList && productList.length > 0
           ? productList.map((productItem) => (
               <AdminProductTile
-                setFormData={setFormData}
-                setOpenCreateProductsDialog={setOpenCreateProductsDialog}
-                setCurrentEditedId={setCurrentEditedId}
                 product={productItem}
+                onEdit={handleEditProduct}
                 handleDelete={handleDelete}
-                key={productItem.id}
+                key={productItem.id || productItem._id}
               />
             ))
           : null}
       </div>
       <Sheet
         open={openCreateProductsDialog}
-        onOpenChange={() => {
-          setOpenCreateProductsDialog(false);
-          setCurrentEditedId(null);
-          setFormData(initialFormData);
+        onOpenChange={(open) => {
+          if (!open) handleCloseProductSheet();
         }}
       >
         <SheetContent side="right" className="overflow-auto">
@@ -168,16 +193,18 @@ function AdminProducts() {
               {currentEditedId !== null ? "Edit Product" : "Add New Product"}
             </SheetTitle>
           </SheetHeader>
-          <ProductImageUpload
-            imageFile={imageFile}
-            setImageFile={setImageFile}
-            uploadedImageUrl={uploadedImageUrl}
-            setUploadedImageUrl={setUploadedImageUrl}
-            setImageLoadingState={setImageLoadingState}
-            imageLoadingState={imageLoadingState}
-            isEditMode={currentEditedId !== null}
-          />
           <div className="py-6">
+            <ProductImagesUpload
+              mainImage={mainImage}
+              subImages={subImages}
+              onMainImageChange={(url) => {
+                setMainImage(url);
+                setFormData((prev) => ({ ...prev, image: url }));
+              }}
+              onSubImagesChange={setSubImages}
+            />
+          </div>
+          <div className="pb-6">
             <CommonForm
               onSubmit={onSubmit}
               formData={formData}

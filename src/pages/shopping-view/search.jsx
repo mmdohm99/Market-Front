@@ -1,5 +1,4 @@
 import ProductFilter from "@/components/shopping-view/filter";
-import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,6 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { sortOptions } from "@/config";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
-import { fetchProductDetails } from "@/store/shop/products-slice";
 import {
   getSearchResults,
   resetSearchResults,
@@ -43,11 +41,9 @@ function SearchProducts() {
   const [hasSearched, setHasSearched] = useState(false);
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState("price-lowtohigh");
-  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const { searchResults } = useSelector((state) => state.shopSearch);
-  const { productDetails } = useSelector((state) => state.shopProducts);
 
   const { user } = useSelector((state) => state.auth);
 
@@ -207,7 +203,7 @@ function SearchProducts() {
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
-        product: productList.find(
+        product: searchResults.find(
           (item) =>
             item._id === getCurrentProductId || item.id === getCurrentProductId,
         ),
@@ -221,17 +217,6 @@ function SearchProducts() {
       }
     });
   }
-
-  function handleGetProductDetails(getCurrentProductId) {
-    console.log(getCurrentProductId);
-    dispatch(fetchProductDetails(getCurrentProductId));
-  }
-
-  useEffect(() => {
-    if (productDetails !== null) setOpenDetailsDialog(true);
-  }, [productDetails]);
-
-  console.log(searchResults, "searchResults");
 
   return (
     <div className="container mx-auto md:px-6 px-4 py-8">
@@ -301,7 +286,6 @@ function SearchProducts() {
                     key={item._id}
                     handleAddtoCart={handleAddtoCart}
                     product={item}
-                    handleGetProductDetails={handleGetProductDetails}
                   />
                 ))}
               </div>
@@ -315,11 +299,6 @@ function SearchProducts() {
           </p>
         </div>
       )}
-      <ProductDetailsDialog
-        open={openDetailsDialog}
-        setOpen={setOpenDetailsDialog}
-        productDetails={productDetails}
-      />
     </div>
   );
 }

@@ -49,27 +49,33 @@ function AdminBanners() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    if (!formData.image || !formData.title) {
+
+    const imageUrl = uploadedImageUrl || formData.image;
+
+    if (!imageUrl || !formData.title) {
       toast({
         title: "Error",
-        description: "Please fill in all required fields",
+        description: imageLoadingState
+          ? "Please wait for the image to finish uploading"
+          : "Please fill in all required fields",
         variant: "destructive",
       });
       return;
     }
 
+    const bannerPayload = { ...formData, image: imageUrl };
+
     try {
       if (editingBanner) {
         await dispatch(
-          updateBanner({ id: editingBanner._id, bannerData: formData })
+          updateBanner({ id: editingBanner._id, bannerData: bannerPayload })
         );
         toast({
           title: "Success",
           description: "Banner updated successfully",
         });
       } else {
-        await dispatch(createBanner(formData));
+        await dispatch(createBanner(bannerPayload));
         toast({
           title: "Success",
           description: "Banner created successfully",
@@ -181,15 +187,10 @@ function AdminBanners() {
                   setUploadedImageUrl={setUploadedImageUrl}
                   setImageLoadingState={setImageLoadingState}
                   imageLoadingState={imageLoadingState}
+                  onImageUrlChange={(url) =>
+                    setFormData((prev) => ({ ...prev, image: url }))
+                  }
                   isCustomStyling={true}
-                />
-                <Input
-                  type="hidden"
-                  value={uploadedImageUrl}
-                  onChange={(e) => {
-                    console.log(e.target.value, "e.target.value");
-                    setFormData({ ...formData, image: e.target.value });
-                  }}
                 />
               </div>
 
@@ -268,7 +269,10 @@ function AdminBanners() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isLoading}>
+                <Button
+                  type="submit"
+                  disabled={isLoading || imageLoadingState}
+                >
                   {editingBanner ? "Update" : "Create"} Banner
                 </Button>
               </div>

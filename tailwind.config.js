@@ -107,6 +107,22 @@ module.exports = {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        "slide-in-right": {
+          from: { opacity: "0", transform: "translateX(28px)" },
+          to: { opacity: "1", transform: "translateX(0)" },
+        },
+        "slide-in-left": {
+          from: { opacity: "0", transform: "translateX(-28px)" },
+          to: { opacity: "1", transform: "translateX(0)" },
+        },
+        "slide-out-left": {
+          from: { opacity: "1", transform: "translateX(0)" },
+          to: { opacity: "0", transform: "translateX(-28px)" },
+        },
+        "slide-out-right": {
+          from: { opacity: "1", transform: "translateX(0)" },
+          to: { opacity: "0", transform: "translateX(28px)" },
+        },
         "gradient-x": {
           "0%, 100%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
@@ -121,6 +137,8 @@ module.exports = {
         float: "float 4s ease-in-out infinite",
         shimmer: "shimmer 2s linear infinite",
         "gradient-x": "gradient-x 8s ease infinite",
+        "slide-in-right": "slide-in-right 0.45s ease-out forwards",
+        "slide-in-left": "slide-in-left 0.45s ease-out forwards",
       },
     },
   },

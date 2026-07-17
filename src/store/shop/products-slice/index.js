@@ -48,8 +48,9 @@ const shoppingProductSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllFilteredProducts.pending, (state, action) => {
+      .addCase(fetchAllFilteredProducts.pending, (state) => {
         state.isLoading = true;
+        state.productList = [];
       })
       .addCase(fetchAllFilteredProducts.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -59,8 +60,9 @@ const shoppingProductSlice = createSlice({
         state.isLoading = false;
         state.productList = [];
       })
-      .addCase(fetchProductDetails.pending, (state, action) => {
+      .addCase(fetchProductDetails.pending, (state) => {
         state.isLoading = true;
+        state.productDetails = null;
       })
       .addCase(fetchProductDetails.fulfilled, (state, action) => {
         state.isLoading = false;

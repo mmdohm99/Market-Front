@@ -19,13 +19,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAllFilteredProducts,
-  fetchProductDetails,
 } from "@/store/shop/products-slice";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "@/components/ui/use-toast";
-import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import { getFeatureImages } from "@/store/common-slice";
 import { getActiveBanners } from "@/store/admin/banner-slice";
 import { getActiveCategories } from "@/store/admin/category-slice";
@@ -47,35 +45,42 @@ const iconMap = {
 
 function ShoppingHome() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { productList, productDetails } = useSelector(
+  const { productList } = useSelector(
     (state) => state.shopProducts,
   );
   const { featureImageList } = useSelector((state) => state.commonFeature);
   const { activeBannerList } = useSelector((state) => state.adminBanner);
   const { activeCategoryList } = useSelector((state) => state.adminCategory);
   const { activeBrandList } = useSelector((state) => state.adminBrand);
-  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const { user } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.shopCart);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   function handleNavigateToListingPage(getCurrentItem, section) {
-    sessionStorage.removeItem("filters");
-    const currentFilter = { [section]: [getCurrentItem.id] };
-    sessionStorage.setItem("filters", JSON.stringify(currentFilter));
-    navigate(`/shop/listing`);
+    navigate(
+      `/shop/listing?${section}=${encodeURIComponent(getCurrentItem.id)}`,
+    );
   }
 
-  function handleGetProductDetails(getCurrentProductId) {
-    dispatch(fetchProductDetails(getCurrentProductId));
-  }
-
-  function handleAddtoCart(getCurrentProductId) {
+  function handleAddtoCart(getCurrentProductId, getTotalStock) {
     const product = productList.find(
       (item) =>
         item._id === getCurrentProductId || item.id === getCurrentProductId,
     );
+    const existingItems = cartItems?.items || [];
+    const existingItem = existingItems.find(
+      (item) => item.productId === getCurrentProductId,
+    );
+
+    if (existingItem && existingItem.quantity + 1 > getTotalStock) {
+      toast({
+        title: `Only ${getTotalStock} items available`,
+        variant: "destructive",
+      });
+      return;
+    }
 
     dispatch(
       addToCart({
@@ -91,10 +96,6 @@ function ShoppingHome() {
       }
     });
   }
-
-  useEffect(() => {
-    if (productDetails !== null) setOpenDetailsDialog(true);
-  }, [productDetails]);
 
   useEffect(() => {
     const banners =
@@ -223,33 +224,49 @@ function ShoppingHome() {
                   const IconComponent = iconMap[categoryItem.icon] ?? ShirtIcon;
                   return (
                     <Card
-                      key={categoryItem._id}
-                      onClick={() =>
-                        handleNavigateToListingPage(
-                          {
-                            id: categoryItem.slug,
-                            label: categoryItem.name,
-                          },
-                          "category",
-                        )
-                      }
-                      className="group cursor-pointer border-2 border-transparent hover:border-primary/30 hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 animate-fade-in-up opacity-0"
-                      style={{
-                        animationFillMode: "forwards",
-                        animationDelay: `${180 + i * 60}ms`,
-                      }}
-                    >
-                      <CardContent className="flex flex-col items-center justify-center p-6 md:p-8">
-                        <div className="rounded-full bg-primary/10 p-4 mb-3 group-hover:bg-primary/20 transition-colors">
-                          {IconComponent && (
-                            <IconComponent className="h-8 w-8 md:h-10 md:w-10 text-primary" />
-                          )}
+                    key={categoryItem._id}
+                    onClick={() =>
+                      handleNavigateToListingPage(
+                        {
+                          id: categoryItem.slug,
+                          label: categoryItem.name,
+                        },
+                        "category",
+                      )
+                    }
+                    className="group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-primary/40 hover:border-primary hover:shadow-xl transition-all duration-300 animate-fade-in-up opacity-0"
+                    style={{
+                      animationFillMode: "forwards",
+                      animationDelay: `${180 + i * 60}ms`,
+                    }}
+                  >
+                    <CardContent className="p-0">
+                      <div className="relative w-full aspect-square overflow-hidden">
+                        {categoryItem.image ? (
+                          <img
+                            src={categoryItem.image}
+                            alt={categoryItem.name}
+                            className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-primary/10">
+                            {IconComponent && (
+                              <IconComponent className="h-12 w-12 text-primary" />
+                            )}
+                          </div>
+                        )}
+                  
+                        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between bg-white rounded-xl px-4 py-3 shadow-md">
+                          <span className="font-bold text-foreground">
+                            {categoryItem.name}
+                          </span>
+                          <span className="text-muted-foreground group-hover:translate-x-1 transition-transform duration-300">
+                            &rsaquo;
+                          </span>
                         </div>
-                        <span className="font-bold text-foreground">
-                          {categoryItem.name}
-                        </span>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </CardContent>
+                  </Card>
                   );
                 })
               : null}
@@ -339,7 +356,6 @@ function ShoppingHome() {
                     }}
                   >
                     <ShoppingProductTile
-                      handleGetProductDetails={handleGetProductDetails}
                       product={productItem}
                       handleAddtoCart={handleAddtoCart}
                     />
@@ -349,12 +365,6 @@ function ShoppingHome() {
           </div>
         </div>
       </section>
-
-      <ProductDetailsDialog
-        open={openDetailsDialog}
-        setOpen={setOpenDetailsDialog}
-        productDetails={productDetails}
-      />
     </div>
   );
 }

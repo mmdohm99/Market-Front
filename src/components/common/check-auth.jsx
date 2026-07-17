@@ -9,7 +9,6 @@ function CheckAuth({ isAuthenticated, user, children }) {
   const isAdminRoute = location.pathname.includes("/admin");
   const isShopRoute = location.pathname.includes("/shop");
   const isProtectedShopRoute =
-    location.pathname.includes("/shop/checkout") ||
     location.pathname.includes("/shop/account") ||
     location.pathname.includes("/shop/paymob-return") ||
     location.pathname.includes("/shop/payment-success");

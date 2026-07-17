@@ -62,10 +62,15 @@ function AdminCategories() {
       return;
     }
 
+    const categoryPayload = {
+      ...formData,
+      image: uploadedImageUrl || formData.image,
+    };
+
     try {
       if (editingCategory) {
         await dispatch(
-          updateCategory({ id: editingCategory._id, categoryData: formData })
+          updateCategory({ id: editingCategory._id, categoryData: categoryPayload })
         );
         toast({
           title: "Success",
@@ -74,7 +79,7 @@ function AdminCategories() {
       } else {
         await dispatch(
           createCategory({
-            ...formData,
+            ...categoryPayload,
             slug: formData.name.toLowerCase().replace(/ /g, "-"),
           })
         );
@@ -227,14 +232,10 @@ function AdminCategories() {
                   setUploadedImageUrl={setUploadedImageUrl}
                   setImageLoadingState={setImageLoadingState}
                   imageLoadingState={imageLoadingState}
-                  isCustomStyling={true}
-                />
-                <Input
-                  type="hidden"
-                  value={uploadedImageUrl}
-                  onChange={(e) =>
-                    setFormData({ ...formData, image: e.target.value })
+                  onImageUrlChange={(url) =>
+                    setFormData((prev) => ({ ...prev, image: url }))
                   }
+                  isCustomStyling={true}
                 />
               </div>
 
@@ -276,7 +277,10 @@ function AdminCategories() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isLoading}>
+                <Button
+                  type="submit"
+                  disabled={isLoading || imageLoadingState}
+                >
                   {editingCategory ? "Update" : "Create"} Category
                 </Button>
               </div>

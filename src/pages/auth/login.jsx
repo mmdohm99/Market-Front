@@ -22,17 +22,32 @@ function AuthLogin() {
 
   function onSubmit(event) {
     event.preventDefault();
+  
     dispatch(loginUser(formData)).then((data) => {
       if (data?.payload?.success) {
-        const userId = data.payload.user?.id;
+        const user = data.payload.user;
+        const userId = user?.id;
+  console.log(user)
         dispatch(mergeGuestCartOnLogin(userId)).then(() => {
           toast({ title: data?.payload?.message });
-          navigate(redirectTo);
+  
+          if (user?.role === "admin") {
+            navigate("/admin/dashboard");
+          } else {
+            navigate("/shop/home");
+          }
         });
       } else {
-        toast({ title: data?.message, variant: "destructive" });
+        toast({
+          title: data?.message,
+          variant: "destructive",
+        });
       }
     });
+  }
+
+  function handleContinueAsGuest() {
+    navigate('/shop/home');
   }
 
   return (
@@ -63,6 +78,26 @@ function AuthLogin() {
             buttonClassName="mt-2 w-full transition-transform hover:scale-[1.02] active:scale-[0.98]"
           />
         </div>
+
+        <div
+          className="animate-fade-in-up animate-delay-250 flex items-center gap-3 opacity-0"
+          style={{ animationFillMode: "forwards" }}
+        >
+          <div className="h-px flex-1 bg-border" />
+          <span className="text-xs uppercase tracking-wide text-muted-foreground">
+            or
+          </span>
+          <div className="h-px flex-1 bg-border" />
+        </div>
+
+        <button
+          type="button"
+          onClick={handleContinueAsGuest}
+          className="animate-fade-in-up animate-delay-250 w-full rounded-lg border border-border bg-transparent py-2.5 text-sm font-semibold text-foreground opacity-0 transition-colors hover:bg-muted"
+          style={{ animationFillMode: "forwards" }}
+        >
+          Continue shopping
+        </button>
 
         <p
           className="animate-fade-in-up animate-delay-300 text-center text-sm text-muted-foreground opacity-0"
