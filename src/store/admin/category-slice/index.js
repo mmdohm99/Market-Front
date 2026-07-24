@@ -12,7 +12,7 @@ export const getAllCategories = createAsyncThunk(
   "category/getAllCategories",
   async () => {
     const response = await axios.get(
-      `http://localhost:5000/api/admin/categories`
+      `${import.meta.env.VITE_API_URL}/admin/categories`
     );
     return response.data;
   }
@@ -23,7 +23,7 @@ export const getActiveCategories = createAsyncThunk(
   "category/getActiveCategories",
   async () => {
     const response = await axios.get(
-      `http://localhost:5000/api/admin/categories/active`
+      `${import.meta.env.VITE_API_URL}/admin/categories/active`
     );
     return response.data;
   }
@@ -34,7 +34,7 @@ export const createCategory = createAsyncThunk(
   "category/createCategory",
   async (categoryData) => {
     const response = await axios.post(
-      `http://localhost:5000/api/admin/categories`,
+      `${import.meta.env.VITE_API_URL}/admin/categories`,
       categoryData
     );
     return response.data;
@@ -46,7 +46,7 @@ export const updateCategory = createAsyncThunk(
   "category/updateCategory",
   async ({ id, categoryData }) => {
     const response = await axios.put(
-      `http://localhost:5000/api/admin/categories/${id}`,
+      `${import.meta.env.VITE_API_URL}/admin/categories/${id}`,
       categoryData
     );
     return response.data;
@@ -58,7 +58,7 @@ export const deleteCategory = createAsyncThunk(
   "category/deleteCategory",
   async (id) => {
     const response = await axios.delete(
-      `http://localhost:5000/api/admin/categories/${id}`
+      `${import.meta.env.VITE_API_URL}/admin/categories/${id}`
     );
     return response.data;
   }
@@ -69,7 +69,7 @@ export const toggleCategoryStatus = createAsyncThunk(
   "category/toggleCategoryStatus",
   async (id) => {
     const response = await axios.patch(
-      `http://localhost:5000/api/admin/categories/${id}/toggle`
+      `${import.meta.env.VITE_API_URL}/admin/categories/${id}/toggle`
     );
     return response.data;
   }

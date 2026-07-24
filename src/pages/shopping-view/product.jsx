@@ -81,7 +81,7 @@ function ProductPage() {
     setSimilarLoading(true);
     axios
       .get(
-        `http://localhost:5000/api/shop/products/get?category=${encodeURIComponent(categorySlug)}&sortBy=price-lowtohigh`,
+        `${import.meta.env.VITE_API_URL}/shop/products/get?category=${encodeURIComponent(categorySlug)}&sortBy=price-lowtohigh`,
       )
       .then((response) => {
         if (response.data?.success) {

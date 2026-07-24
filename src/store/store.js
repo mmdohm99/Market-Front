@@ -5,6 +5,7 @@ import adminOrderSlice from "./admin/order-slice";
 import adminBannerSlice from "./admin/banner-slice";
 import adminCategorySlice from "./admin/category-slice";
 import adminBrandSlice from "./admin/brand-slice";
+import adminSocialLinkSlice from "./admin/social-link-slice";
 
 import shopProductsSlice from "./shop/products-slice";
 import shopCartSlice from "./shop/cart-slice";
@@ -13,6 +14,7 @@ import shopOrderSlice from "./shop/order-slice";
 import shopSearchSlice from "./shop/search-slice";
 import shopReviewSlice from "./shop/review-slice";
 import commonFeatureSlice from "./common-slice";
+import siteAnnouncementSlice from "./site-announcement-slice";
 
 const store = configureStore({
   reducer: {
@@ -23,6 +25,7 @@ const store = configureStore({
     adminBanner: adminBannerSlice,
     adminCategory: adminCategorySlice,
     adminBrand: adminBrandSlice,
+    adminSocialLink: adminSocialLinkSlice,
 
     shopProducts: shopProductsSlice,
     shopCart: shopCartSlice,
@@ -32,6 +35,7 @@ const store = configureStore({
     shopReview: shopReviewSlice,
 
     commonFeature: commonFeatureSlice,
+    siteAnnouncement: siteAnnouncementSlice,
   },
 });
 

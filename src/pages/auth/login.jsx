@@ -22,15 +22,15 @@ function AuthLogin() {
 
   function onSubmit(event) {
     event.preventDefault();
-  
+
     dispatch(loginUser(formData)).then((data) => {
       if (data?.payload?.success) {
         const user = data.payload.user;
         const userId = user?.id;
-  console.log(user)
+
         dispatch(mergeGuestCartOnLogin(userId)).then(() => {
           toast({ title: data?.payload?.message });
-  
+
           if (user?.role === "admin") {
             navigate("/admin/dashboard");
           } else {
@@ -38,8 +38,9 @@ function AuthLogin() {
           }
         });
       } else {
+        console.log(data);
         toast({
-          title: data?.message,
+          title: data?.payload?.message,
           variant: "destructive",
         });
       }
@@ -47,7 +48,7 @@ function AuthLogin() {
   }
 
   function handleContinueAsGuest() {
-    navigate('/shop/home');
+    navigate("/shop/home");
   }
 
   return (

@@ -11,7 +11,7 @@ const initialState = {
 export const getAllBanners = createAsyncThunk(
   "banner/getAllBanners",
   async () => {
-    const response = await axios.get(`http://localhost:5000/api/admin/banners`);
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/banners`);
     return response.data;
   }
 );
@@ -21,7 +21,7 @@ export const getActiveBanners = createAsyncThunk(
   "banner/getActiveBanners",
   async () => {
     const response = await axios.get(
-      `http://localhost:5000/api/admin/banners/active`
+      `${import.meta.env.VITE_API_URL}/admin/banners/active`
     );
     return response.data;
   }
@@ -32,7 +32,7 @@ export const createBanner = createAsyncThunk(
   "banner/createBanner",
   async (bannerData) => {
     const response = await axios.post(
-      `http://localhost:5000/api/admin/banners`,
+      `${import.meta.env.VITE_API_URL}/admin/banners`,
       bannerData
     );
     return response.data;
@@ -44,7 +44,7 @@ export const updateBanner = createAsyncThunk(
   "banner/updateBanner",
   async ({ id, bannerData }) => {
     const response = await axios.put(
-      `http://localhost:5000/api/admin/banners/${id}`,
+      `${import.meta.env.VITE_API_URL}/admin/banners/${id}`,
       bannerData
     );
     return response.data;
@@ -56,7 +56,7 @@ export const deleteBanner = createAsyncThunk(
   "banner/deleteBanner",
   async (id) => {
     const response = await axios.delete(
-      `http://localhost:5000/api/admin/banners/${id}`
+      `${import.meta.env.VITE_API_URL}/admin/banners/${id}`
     );
     return response.data;
   }
@@ -67,7 +67,7 @@ export const toggleBannerStatus = createAsyncThunk(
   "banner/toggleBannerStatus",
   async (id) => {
     const response = await axios.patch(
-      `http://localhost:5000/api/admin/banners/${id}/toggle`
+      `${import.meta.env.VITE_API_URL}/admin/banners/${id}/toggle`
     );
     return response.data;
   }

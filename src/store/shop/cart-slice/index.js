@@ -42,7 +42,7 @@ export const addToCart = createAsyncThunk(
     }
 
     const response = await axios.post(
-      "http://localhost:5000/api/shop/cart/add",
+      `${import.meta.env.VITE_API_URL}/shop/cart/add`,
       {
         userId,
         productId,
@@ -62,7 +62,7 @@ export const fetchCartItems = createAsyncThunk(
     }
 
     const response = await axios.get(
-      `http://localhost:5000/api/shop/cart/get/${userId}`,
+      `${import.meta.env.VITE_API_URL}/shop/cart/get/${userId}`,
     );
 
     return response.data;
@@ -81,7 +81,7 @@ export const deleteCartItem = createAsyncThunk(
     }
 
     const response = await axios.delete(
-      `http://localhost:5000/api/shop/cart/${userId}/${productId}`,
+      `${import.meta.env.VITE_API_URL}/shop/cart/${userId}/${productId}`,
     );
 
     return response.data;
@@ -107,7 +107,7 @@ export const updateCartQuantity = createAsyncThunk(
     }
 
     const response = await axios.put(
-      "http://localhost:5000/api/shop/cart/update-cart",
+      `${import.meta.env.VITE_API_URL}/shop/cart/update-cart`,
       {
         userId,
         productId,
@@ -126,13 +126,13 @@ export const mergeGuestCartOnLogin = createAsyncThunk(
 
     if (guestItems.length === 0) {
       const response = await axios.get(
-        `http://localhost:5000/api/shop/cart/get/${userId}`,
+        `${import.meta.env.VITE_API_URL}/shop/cart/get/${userId}`,
       );
       return response.data;
     }
 
     for (const item of guestItems) {
-      await axios.post("http://localhost:5000/api/shop/cart/add", {
+      await axios.post(`${import.meta.env.VITE_API_URL}/shop/cart/add`, {
         userId,
         productId: item.productId,
         quantity: item.quantity,
@@ -142,7 +142,7 @@ export const mergeGuestCartOnLogin = createAsyncThunk(
     clearGuestCart();
 
     const response = await axios.get(
-      `http://localhost:5000/api/shop/cart/get/${userId}`,
+      `${import.meta.env.VITE_API_URL}/shop/cart/get/${userId}`,
     );
 
     return response.data;

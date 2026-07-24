@@ -9,7 +9,7 @@ const initialState = {
 
 // Get all brands
 export const getAllBrands = createAsyncThunk("brand/getAllBrands", async () => {
-  const response = await axios.get(`http://localhost:5000/api/admin/brands`);
+  const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/brands`);
   return response.data;
 });
 
@@ -18,7 +18,7 @@ export const getActiveBrands = createAsyncThunk(
   "brand/getActiveBrands",
   async () => {
     const response = await axios.get(
-      `http://localhost:5000/api/admin/brands/active`
+      `${import.meta.env.VITE_API_URL}/admin/brands/active`
     );
     return response.data;
   }
@@ -29,7 +29,7 @@ export const createBrand = createAsyncThunk(
   "brand/createBrand",
   async (brandData) => {
     const response = await axios.post(
-      `http://localhost:5000/api/admin/brands`,
+      `${import.meta.env.VITE_API_URL}/admin/brands`,
       brandData
     );
     return response.data;
@@ -41,7 +41,7 @@ export const updateBrand = createAsyncThunk(
   "brand/updateBrand",
   async ({ id, brandData }) => {
     const response = await axios.put(
-      `http://localhost:5000/api/admin/brands/${id}`,
+      `${import.meta.env.VITE_API_URL}/admin/brands/${id}`,
       brandData
     );
     return response.data;
@@ -51,7 +51,7 @@ export const updateBrand = createAsyncThunk(
 // Delete brand
 export const deleteBrand = createAsyncThunk("brand/deleteBrand", async (id) => {
   const response = await axios.delete(
-    `http://localhost:5000/api/admin/brands/${id}`
+    `${import.meta.env.VITE_API_URL}/admin/brands/${id}`
   );
   return response.data;
 });
@@ -61,7 +61,7 @@ export const toggleBrandStatus = createAsyncThunk(
   "brand/toggleBrandStatus",
   async (id) => {
     const response = await axios.patch(
-      `http://localhost:5000/api/admin/brands/${id}/toggle`
+          `${import.meta.env.VITE_API_URL}/admin/brands/${id}/toggle`
     );
     return response.data;
   }
