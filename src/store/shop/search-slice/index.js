@@ -15,7 +15,7 @@ export const getSearchResults = createAsyncThunk(
     });
 
     const queryString = queryParams.toString();
-    const url = `http://localhost:5000/api/shop/search/${keyword}${
+    const url = `${import.meta.env.VITE_API_URL}/shop/search/${keyword}${
       queryString ? `?${queryString}` : ""
     }`;
 
