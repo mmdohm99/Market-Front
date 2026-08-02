@@ -17,9 +17,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchAllFilteredProducts,
-} from "@/store/shop/products-slice";
+import { fetchAllFilteredProducts } from "@/store/shop/products-slice";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
@@ -45,9 +43,7 @@ const iconMap = {
 
 function ShoppingHome() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { productList } = useSelector(
-    (state) => state.shopProducts,
-  );
+  const { productList } = useSelector((state) => state.shopProducts);
   const { featureImageList } = useSelector((state) => state.commonFeature);
   const { activeBannerList } = useSelector((state) => state.adminBanner);
   const { activeCategoryList } = useSelector((state) => state.adminCategory);
@@ -224,49 +220,49 @@ function ShoppingHome() {
                   const IconComponent = iconMap[categoryItem.icon] ?? ShirtIcon;
                   return (
                     <Card
-                    key={categoryItem._id}
-                    onClick={() =>
-                      handleNavigateToListingPage(
-                        {
-                          id: categoryItem.slug,
-                          label: categoryItem.name,
-                        },
-                        "category",
-                      )
-                    }
-                    className="group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-primary/40 hover:border-primary hover:shadow-xl transition-all duration-300 animate-fade-in-up opacity-0"
-                    style={{
-                      animationFillMode: "forwards",
-                      animationDelay: `${180 + i * 60}ms`,
-                    }}
-                  >
-                    <CardContent className="p-0">
-                      <div className="relative w-full aspect-square overflow-hidden">
-                        {categoryItem.image ? (
-                          <img
-                            src={categoryItem.image}
-                            alt={categoryItem.name}
-                            className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-primary/10">
-                            {IconComponent && (
-                              <IconComponent className="h-12 w-12 text-primary" />
-                            )}
+                      key={categoryItem._id}
+                      onClick={() =>
+                        handleNavigateToListingPage(
+                          {
+                            id: categoryItem.slug,
+                            label: categoryItem.name,
+                          },
+                          "category",
+                        )
+                      }
+                      className="group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-primary/40 hover:border-primary hover:shadow-xl transition-all duration-300 animate-fade-in-up opacity-0"
+                      style={{
+                        animationFillMode: "forwards",
+                        animationDelay: `${180 + i * 60}ms`,
+                      }}
+                    >
+                      <CardContent className="p-0">
+                        <div className="relative w-full aspect-square overflow-hidden">
+                          {categoryItem.image ? (
+                            <img
+                              src={categoryItem.image}
+                              alt={categoryItem.name}
+                              className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-primary/10">
+                              {IconComponent && (
+                                <IconComponent className="h-12 w-12 text-primary" />
+                              )}
+                            </div>
+                          )}
+
+                          <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between bg-white rounded-xl px-4 py-3 shadow-md">
+                            <span className="font-bold text-primary text-sm md:text-base truncate">
+                              {categoryItem.name}
+                            </span>
+                            <span className="text-muted-foreground group-hover:translate-x-1 transition-transform duration-300">
+                              &rsaquo;
+                            </span>
                           </div>
-                        )}
-                  
-                        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between bg-white rounded-xl px-4 py-3 shadow-md">
-                          <span className="font-bold text-foreground">
-                            {categoryItem.name}
-                          </span>
-                          <span className="text-muted-foreground group-hover:translate-x-1 transition-transform duration-300">
-                            &rsaquo;
-                          </span>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
                   );
                 })
               : null}
