@@ -107,11 +107,16 @@ function AdminProducts() {
   function isFormValid() {
     if (!mainImage) return false;
 
+    const optionalFields = new Set([
+      "averageReview",
+      "image",
+      "brand",
+      "description",
+      "salePrice",
+    ]);
+
     return Object.keys(formData)
-      .filter(
-        (currentKey) =>
-          currentKey !== "averageReview" && currentKey !== "image",
-      )
+      .filter((currentKey) => !optionalFields.has(currentKey))
       .map((key) => formData[key] !== "" && formData[key] != null)
       .every((item) => item);
   }
