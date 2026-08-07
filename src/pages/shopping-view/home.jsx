@@ -151,28 +151,37 @@ function ShoppingHome() {
           <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-muted to-accent/20" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
-          <h1
-            className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white drop-shadow-lg animate-fade-in-up"
-            style={{ animationFillMode: "forwards" }}
-          >
-            Handcrafted for you
-          </h1>
-          <p
-            className="mt-4 max-w-xl text-lg text-white/90 drop-shadow animate-fade-in-up animate-delay-100 opacity-0"
-            style={{ animationFillMode: "forwards" }}
-          >
-            Discover unique pieces from independent makers. Shop the collection.
-          </p>
-          <Button
-            size="lg"
-            className="mt-8 animate-fade-in-up animate-delay-200 opacity-0 bg-white text-primary hover:bg-white/90 hover:scale-105 transition-transform"
-            style={{ animationFillMode: "forwards" }}
-            onClick={() => navigate("/shop/listing")}
-          >
-            Shop now
-          </Button>
-        </div>
+{/* Gradient scrim — guarantees contrast on any banner */}
+<div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
+
+<div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
+  <h1
+    className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white animate-fade-in-up"
+    style={{
+      animationFillMode: "forwards",
+      textShadow: "0 2px 12px rgba(0,0,0,0.6), 0 1px 3px rgba(0,0,0,0.8)",
+    }}
+  >
+    Handcrafted for you
+  </h1>
+  <p
+    className="mt-4 max-w-xl text-lg text-white animate-fade-in-up animate-delay-100 opacity-0"
+    style={{
+      animationFillMode: "forwards",
+      textShadow: "0 1px 6px rgba(0,0,0,0.6)",
+    }}
+  >
+    Discover unique pieces from independent makers. Shop the collection.
+  </p>
+  <Button
+    size="lg"
+    className="mt-8 animate-fade-in-up animate-delay-200 opacity-0 bg-white text-primary hover:bg-white/90 hover:scale-105 transition-transform"
+    style={{ animationFillMode: "forwards" }}
+    onClick={() => navigate("/shop/listing")}
+  >
+    Shop now
+  </Button>
+</div>
         {hasBanners && banners.length > 1 && (
           <>
             <Button
@@ -271,7 +280,7 @@ function ShoppingHome() {
       </section>
 
       {/* Shop by brand */}
-      <section className="py-16 md:py-20 bg-background">
+      {activeBrandList?.length > 0  &&   <section className="py-16 md:py-20 bg-background">
         <div className="container mx-auto px-4">
           <h2
             className="font-heading text-3xl md:text-4xl font-bold text-center mb-4 text-foreground animate-fade-in-up opacity-0"
@@ -323,7 +332,8 @@ function ShoppingHome() {
               : null}
           </div>
         </div>
-      </section>
+      </section>}
+ 
 
       {/* Feature products */}
       <section className="py-16 md:py-20 bg-muted/30">
