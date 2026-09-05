@@ -153,7 +153,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
               </Button>
             ) : (
               <Button
-                className="w-full"
+                className="w-full bg-pink-800 text-foreground"
                 onClick={() =>
                   handleAddToCart(
                     productDetails?._id,

@@ -144,8 +144,8 @@ function ProductImageGallery({ product }) {
               onClick={() => handleThumbnailClick(index)}
               className={`h-20 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition-all duration-300 ${
                 index === activeIndex
-                  ? "scale-105 border-orange-500 shadow-md"
-                  : "border-border hover:border-orange-300 hover:scale-[1.02]"
+                  ? "scale-105 border-pink-500 shadow-md"
+                  : "border-border hover:border-pink-300 hover:scale-[1.02]"
               }`}
             >
               <img
@@ -212,7 +212,7 @@ function ProductImageGallery({ product }) {
                   onClick={() => handleThumbnailClick(index)}
                   className={`h-16 w-16 shrink-0 overflow-hidden rounded-md border-2 transition ${
                     index === activeIndex
-                      ? "border-orange-500"
+                      ? "border-pink-500"
                       : "border-white/20 hover:border-white/50"
                   }`}
                 >

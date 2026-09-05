@@ -78,7 +78,7 @@ function ShoppingProductTile({ key, product, handleAddtoCart }) {
         ) : (
           <Button
             onClick={() => handleAddtoCart(productId, product?.totalStock)}
-            className="w-full transition-transform hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full transition-transform hover:scale-[1.02] active:scale-[0.98] bg-pink-800 text-white"
           >
             Add to cart
           </Button>

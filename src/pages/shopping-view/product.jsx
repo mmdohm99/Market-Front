@@ -244,7 +244,7 @@ function ProductPage() {
           {isOutOfStock && (
             <Badge
               variant="outline"
-              className="mb-4 border-orange-400 text-orange-500"
+              className="mb-4 border-pink-400 text-pink-500"
             >
               Out of stock
             </Badge>
@@ -300,7 +300,7 @@ function ProductPage() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button
               size="lg"
-              className="h-12 flex-1 rounded-full bg-orange-200 text-foreground hover:bg-orange-300"
+              className="h-12 flex-1 rounded-full bg-pink-800 text-white hover:bg-pink-300"
               disabled={isOutOfStock}
               onClick={() => handleAddToCart(false)}
             >
@@ -309,7 +309,7 @@ function ProductPage() {
             </Button>
             <Button
               size="lg"
-              className="h-12 flex-1 rounded-full bg-orange-200 text-foreground hover:bg-orange-300"
+              className="h-12 flex-1 rounded-full bg-pink-800 text-white hover:bg-pink-300"
               disabled={isOutOfStock}
               onClick={() => handleAddToCart(true)}
             >
@@ -321,7 +321,7 @@ function ProductPage() {
 
       <section className="mt-12 rounded-xl border border-border bg-background p-6">
         <div className="border-b border-border pb-3">
-          <h2 className="inline-block border-b-2 border-orange-500 pb-2 text-lg font-semibold">
+          <h2 className="inline-block border-b-2 border-pink-500 pb-2 text-lg font-semibold">
             Overview
           </h2>
         </div>
@@ -362,7 +362,7 @@ function ProductPage() {
                     <span className="w-3">{star}</span>
                     <div className="h-2 flex-1 rounded-full bg-muted">
                       <div
-                        className="h-2 rounded-full bg-orange-400"
+                        className="h-2 rounded-full bg-pink-400"
                         style={{ width }}
                       />
                     </div>
@@ -373,7 +373,7 @@ function ProductPage() {
             </div>
 
             <Button
-              className="mt-6 w-full rounded-full bg-orange-500 hover:bg-orange-600"
+              className="mt-6 w-full rounded-full bg-pink-800 text-white hover:bg-pink-300"
               onClick={() => {
                 if (!user?.id) {
                   navigate("/auth/login");
@@ -438,7 +438,7 @@ function ProductPage() {
           {categorySlug && (
             <Link
               to={`/shop/listing?category=${encodeURIComponent(categorySlug)}`}
-              className="text-sm font-medium text-foreground hover:text-orange-500"
+              className="text-sm font-medium text-foreground hover:text-pink-500"
             >
               See all products
             </Link>

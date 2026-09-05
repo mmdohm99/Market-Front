@@ -64,7 +64,7 @@ function CheckoutField({ label, required, children }) {
     <div className="space-y-2">
       <Label className="text-sm font-medium text-foreground">
         {label}
-        {required ? <span className="text-orange-500">*</span> : null}
+        {required ? <span className="text-pink-500">*</span> : null}
       </Label>
       {children}
     </div>
@@ -357,7 +357,7 @@ function ShoppingCheckout() {
           <Button
             type="submit"
             disabled={isLoading || !isFormValid()}
-            className="h-12 w-full rounded-md bg-orange-500 text-base font-medium hover:bg-orange-600"
+            className="h-12 w-full rounded-md bg-pink-500 text-base font-medium hover:bg-pink-600 text-white"
           >
             {isLoading ? "Processing..." : "Continue to Delivery"}
             {!isLoading ? <ArrowRight className="ml-2 h-4 w-4" /> : null}
@@ -383,7 +383,7 @@ function ShoppingCheckout() {
                         alt={item?.title}
                         className="h-16 w-16 rounded-md border border-border object-cover"
                       />
-                      <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs font-semibold text-white">
+                      <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-pink-500 text-xs font-semibold text-white">
                         {item?.quantity}
                       </span>
                     </div>

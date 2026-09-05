@@ -13,7 +13,7 @@ function BottomNav({ onCartOpen, onMenuOpen }) {
           end
           className={({ isActive }) =>
             `flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[11px] font-medium transition-colors duration-150 ${
-              isActive ? "text-orange-500" : "text-muted-foreground hover:text-foreground"
+              isActive ? "text-pink-500" : "text-muted-foreground hover:text-foreground"
             }`
           }
         >
@@ -30,7 +30,7 @@ function BottomNav({ onCartOpen, onMenuOpen }) {
           to="/shop/listing"
           className={({ isActive }) =>
             `flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[11px] font-medium transition-colors duration-150 ${
-              isActive ? "text-orange-500" : "text-muted-foreground hover:text-foreground"
+              isActive ? "text-pink-500" : "text-muted-foreground hover:text-foreground"
             }`
           }
         >
@@ -56,7 +56,7 @@ function BottomNav({ onCartOpen, onMenuOpen }) {
           to="/shop/account"
           className={({ isActive }) =>
             `flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[11px] font-medium transition-colors duration-150 ${
-              isActive ? "text-orange-500" : "text-muted-foreground hover:text-foreground"
+              isActive ? "text-pink-500" : "text-muted-foreground hover:text-foreground"
             }`
           }
         >

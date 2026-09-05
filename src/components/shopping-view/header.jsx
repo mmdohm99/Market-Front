@@ -115,7 +115,7 @@ function AnnouncementBar() {
   }
 
   return (
-    <div className="overflow-hidden bg-orange-500 transition-all duration-300 max-h-20 opacity-100 py-2.5">
+    <div className="overflow-hidden bg-pink-500 transition-all duration-300 max-h-20 opacity-100 py-2.5">
       <div className="relative flex items-center justify-center px-10 text-center text-sm text-white">
         <p>{text}</p>
 
@@ -197,7 +197,7 @@ function SocialLinks({ className = "" }) {
             target="_blank"
             rel="noreferrer"
             aria-label={link.label}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-orange-400 hover:text-orange-500"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-border  transition-colors hover:border-pink-400 hover:text-pink-500"
           >
             <Icon className="h-4 w-4" />
           </a>
@@ -229,7 +229,7 @@ function SearchBar({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="glass-input h-11 rounded-full pl-11 pr-4 text-sm focus-visible:ring-orange-400"
+        className="glass-input h-11 rounded-full pl-11 pr-4 text-sm focus-visible:ring-pink-400"
       />
     </form>
   );
@@ -247,7 +247,7 @@ function HeaderCartButton({ openCartSheet, setOpenCartSheet, showAmount = false 
       >
         <ShoppingCart className="h-5 w-5" />
         {showAmount && <span className="font-medium">{total} EGP</span>}
-        <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-bold text-white">
+        <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-pink-500 px-1 text-[10px] font-bold text-white">
           {count}
         </span>
       </button>
@@ -295,8 +295,8 @@ function HeaderAuthActions({
         <DarkModeToggle showLabel />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Avatar className="h-9 w-9 cursor-pointer bg-orange-500">
-              <AvatarFallback className="bg-orange-500 font-bold text-white">
+            <Avatar className="h-9 w-9 cursor-pointer bg-pink-500">
+              <AvatarFallback className="bg-pink-500 font-bold text-white">
                 {user?.userName[0].toUpperCase()}
               </AvatarFallback>
             </Avatar>
@@ -388,8 +388,8 @@ function NavLinks({
             }}
             className={`text-left text-sm font-medium transition-colors ${
               active
-                ? "text-orange-500"
-                : "text-foreground hover:text-orange-500"
+                ? "text-pink-500"
+                : "text-foreground hover:text-pink-500"
             }`}
           >
             {menuItem.label}
@@ -494,7 +494,7 @@ function MobileSearchOverlay({ open, onClose }) {
         <button
           type="button"
           onClick={onClose}
-          className="shrink-0 text-orange-500"
+          className="shrink-0 text-pink-500"
           aria-label="Close search"
         >
           <X className="h-6 w-6" />
