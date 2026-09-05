@@ -129,7 +129,7 @@ function ProductImageGallery({ product }) {
           </>
         )}
 
-        <div className="pointer-events-none absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm text-muted-foreground opacity-90 shadow-md transition group-hover:opacity-100">
+        <div className="pointer-events-none absolute top-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm text-muted-foreground opacity-90 shadow-md transition group-hover:opacity-100">
           <ZoomIn className="h-4 w-4" />
           <span>Hover to zoom &amp; click to enlarge</span>
         </div>
