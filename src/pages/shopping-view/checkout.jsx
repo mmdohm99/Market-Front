@@ -204,26 +204,26 @@ function ShoppingCheckout() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="relative border-b border-border px-4 py-4 sm:px-6">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Return to Cart
-        </button>
-        <Link
-          to="/shop/home"
-          className="absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-md bg-secondary p-1.5"
-        >
-          <img
-            src="/default-logo.svg"
-            alt="Nodum Gallery"
-            className="h-full w-full object-contain"
-          />
-        </Link>
-      </header>
+<header className="relative border-b border-border px-4 py-4 sm:px-6">
+  <button
+    type="button"
+    onClick={() => navigate(-1)}
+    className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+  >
+    <ArrowLeft className="h-4 w-4" />
+    Return to Cart
+  </button>
+  <Link
+    to="/shop/home"
+    className="absolute left-1/2 top-1/2 flex h-18 w-32 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-md  p-1.5"
+  >
+    <img
+      src="/nodum.png"
+      alt="Nodum Gallery"
+      className="h-full w-full object-contain"
+    />
+  </Link>
+</header>
 
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-8 lg:grid-cols-[1fr_380px] lg:px-6">
         <form onSubmit={handlePlaceOrder} className="space-y-10">
