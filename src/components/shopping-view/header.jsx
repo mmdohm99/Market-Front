@@ -131,24 +131,22 @@ function AnnouncementBar() {
     </div>
   );
 }
-
 function SiteLogo({ className = "" }) {
   return (
     <Link
       to="/shop/home"
-      className={`flex shrink-0 items-center ${className}`}
+      // className={`flex shrink-0 items-center ${className}`}
     >
-      <div className="flex h-12 w-12 items-center justify-center rounded-md bg-secondary p-1.5">
+      <div className="flex h-18 w-40 p-2 mt-1">
         <img
-          src="/default-logo.svg"
+          src="/nodum.png"
           alt="Nodum Gallery"
-          className="h-full w-full object-contain"
+          className="h-full w-full "
         />
       </div>
     </Link>
   );
 }
-
 function DarkModeToggle({ className = "", showLabel = false }) {
   const [isDarkMode, setIsDarkMode] = useState(
     () => document.documentElement.classList.contains("dark"),
